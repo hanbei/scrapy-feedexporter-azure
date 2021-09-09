@@ -1,0 +1,8 @@
+*.pyc
+*~
+.cache
+.tox
+*.egg-info
+venv
+.idea/
+boris_old/
