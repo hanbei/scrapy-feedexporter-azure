@@ -1,12 +1,5 @@
-import os
-import unittest
+import pytest
 
-from io import BytesIO
-from scrapy import Spider
-from scrapy.extensions.feedexport import IFeedStorage
-from twisted.internet import defer
-from zope.interface.verify import verifyObject
+def test_answer():
+    assert 3 == 3
 
-
-class ADLSFeedStorageTest(unittest.TestCase):
-    pass

@@ -1,0 +1,2 @@
+azure-storage-file-datalake==12.4.0
+Scrapy==2.5.0
