@@ -9,6 +9,9 @@ class BorisSpider(Spider):
     start_urls = [
         'http://quotes.toscrape.com/page/1/',
         'http://quotes.toscrape.com/page/2/',
+        'http://quotes.toscrape.com/page/3/',
+        'http://quotes.toscrape.com/page/4/',
+        'http://quotes.toscrape.com/page/5/',
     ]
 
     def parse(self, response, **kwargs):
@@ -26,12 +29,20 @@ class BorisSpider(Spider):
 
 configure_logging()
 runner = CrawlerRunner(settings={
-    # 'EXTENSIONS': {'scrapy-feedexporter-adls.ADLSFeedStorage': 100},
-    # 'FEED_STORAGES': {"az": 'scrapy-feedexporter-azure.storage.ADLSFeedStorage'},
-    'FEED_STORAGES': {"az": 'scrapy-feedexporter-azure.storage.BlobStorageFeedStorage'},
-    'FEEDS': {'az://storage_ccount.dfs.core.windows.net': {'format': 'csv'}},
-    'ADLS_STORAGE_CONTAINER': 'storage_container',
-    'ADLS_STORAGE_KEY': 'storage_key',
+    'FEED_URI_PARAMS': 'scrapy-feedexporter-azure.storage.uri_params',
+    'FEED_STORAGES': {
+        "azblob": 'scrapy-feedexporter-azure.storage.BlobStorageFeedStorage',
+        "azadls": 'scrapy-feedexporter-azure.storage.ADLSFeedStorage'
+    },
+    'FEEDS': {
+        # How should the URLs be structured???ß
+        # 'azblob://<account>/<container>/<blob_name>
+        'azblob://devstoreaccount1.blob.core.windows.net/%(spider_name)s/%(year)s/%(month)s/%(day)s-%(batch_id)s.jl': {
+            'format': 'jsonlines',
+            'batch_item_count': 20
+        }
+    },
+    'AZ_BLOB_CONNECTION_STRING': "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;"
 })
 
 d = runner.crawl(BorisSpider)
