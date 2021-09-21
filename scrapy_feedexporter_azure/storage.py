@@ -54,12 +54,12 @@ class BlobStorageFeedStorage(BlockingFeedStorage):
     def _store_in_thread(self, file):
         file.seek(0)
         try:
-            container = self.blob_service.get_container_client(self.container)
-            if not container.exists():
-                container.create_container()
+            container_client = self.blob_service.get_container_client(self.container)
+            if not container_client.exists():
+                container_client.create_container()
 
             # TODO Use batch_id if set
-            blob = container.upload_blob(name=self.path, data=file)
+            blob = container_client.upload_blob(name=self.path, data=file)
         except Exception as e:
             print(e)
 

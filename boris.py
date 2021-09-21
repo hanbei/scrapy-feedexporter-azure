@@ -29,10 +29,10 @@ class BorisSpider(Spider):
 
 configure_logging()
 runner = CrawlerRunner(settings={
-    'FEED_URI_PARAMS': 'scrapy-feedexporter-azure.storage.uri_params',
+    'FEED_URI_PARAMS': 'scrapy_feedexporter_azure.storage.uri_params',
     'FEED_STORAGES': {
-        "azblob": 'scrapy-feedexporter-azure.storage.BlobStorageFeedStorage',
-        "azadls": 'scrapy-feedexporter-azure.storage.ADLSFeedStorage'
+        "azblob": 'scrapy_feedexporter_azure.storage.BlobStorageFeedStorage',
+        "azadls": 'scrapy_feedexporter_azure.storage.ADLSFeedStorage'
     },
     'FEEDS': {
         # How should the URLs be structured???ß

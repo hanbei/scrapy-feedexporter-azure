@@ -2,3 +2,4 @@ Scrapy==2.5.0
 azure-storage-file-datalake==12.4.0
 azure-identity==1.6.1
 pytest
+pytest-mock
