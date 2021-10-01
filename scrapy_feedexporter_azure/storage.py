@@ -1,6 +1,7 @@
 import datetime
 from urllib.parse import urlparse
 
+from azure.identity import ClientSecretCredential
 from azure.storage.blob import BlobServiceClient
 from azure.storage.filedatalake import DataLakeServiceClient
 from scrapy.extensions.feedexport import BlockingFeedStorage
@@ -40,13 +41,15 @@ class ADLSFeedStorage(BlockingFeedStorage):
 
 
 class BlobStorageFeedStorage(BlockingFeedStorage):
-    def __init__(self, uri: str, connection_string: str = None):
+    def __init__(self, uri: str, connection_string: str = None, credentials=None):
+        self.uri = urlparse(uri)
         if connection_string:
-            self.blob_service = BlobServiceClient.from_connection_string(connection_string)
+            self.blob_service = BlobServiceClient(self.uri.netloc, connection_string)
+        elif credentials:
+            self.blob_service = BlobServiceClient(self.uri.netloc, credentials)
         else:
             raise Exception
 
-        self.uri = urlparse(uri)   # TODO parse uri
         self.account = self.uri[1]
         self.container = self.uri[2].split("/")[1]
         self.path = "/".join(self.uri[2].split("/")[2:])
@@ -66,8 +69,20 @@ class BlobStorageFeedStorage(BlockingFeedStorage):
     @classmethod
     def from_crawler(cls, crawler, uri, *, feed_options=None):
         settings = crawler.settings
+
         connection_string = settings.get('AZ_BLOB_CONNECTION_STRING')
-        return cls(uri, connection_string)
+        if not connection_string:
+            tenant_id = settings.get('AZ_BLOB_TENANT_ID')
+            application_id = settings.get('AZ_BLOB_APPLICATION_ID')
+            application_secret = settings.get('AZ_BLOB_APPLICATION_SECRET')
+            token_credential = ClientSecretCredential(
+                tenant_id,
+                application_id,
+                application_secret
+            )
+            return cls(uri, credentials=token_credential)
+        else:
+            return cls(uri, connection_string=connection_string)
 
 
 def uri_params(params, spider):

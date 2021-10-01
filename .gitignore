@@ -8,3 +8,5 @@ venv
 boris_old/
 .tox/
 .pytest_cache/
+.coverage
+htmlcov/

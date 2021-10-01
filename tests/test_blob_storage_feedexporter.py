@@ -6,8 +6,7 @@ from scrapy_feedexporter_azure.storage import BlobStorageFeedStorage
 
 def test_saves_item(mocker: MockerFixture):
     blob_service = mocker.MagicMock()
-    mocker.patch(
-        'scrapy_feedexporter_azure.storage.BlobServiceClient').from_connection_string.return_value = blob_service
+    mocker.patch('scrapy_feedexporter_azure.storage.BlobServiceClient').return_value = blob_service
 
     container_client = mocker.MagicMock()
     blob_service.get_container_client.return_value = container_client
