@@ -46,7 +46,6 @@ runner = CrawlerRunner(settings={
     'AZ_BLOB_TENANT_ID': "xxxxx",
     'AZ_BLOB_APPLICATION_ID': "xxxxxx",
     'AZ_BLOB_APPLICATION_SECRET': "xxxxxxx"
-    # aff4b52f-2e24-48d8-bac6-b22f067033a4
 
 })
 
